@@ -105,8 +105,6 @@ Project/
 1. **Clone or Download** the project files
 2. **Open** `index.html` in a web browser
 3. **Login** using the default credentials:
-   - Email: `kaidi420@gmail.com`
-   - Password: `finalproject`
 4. **Explore** the platform as either a property owner or renter
 
 ## 📱 Browser Compatibility
