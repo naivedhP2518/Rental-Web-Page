@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Rental - HostelHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display.swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .background-gradient {
+            background-color: #f8fafc;
+        }
+        select:disabled {
+            background-color: #f3f4f6;
+            cursor: not-allowed;
+        }
+        .view-container {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .favorite-btn.favorited svg {
+            fill: #ef4444; /* red-500 */
+            stroke: #ef4444; /* red-500 */
+        }
+        .favorite-btn.favorited {
+            cursor: not-allowed;
+            background-color: #fee2e2; /* red-100 */
+        }
+    </style>
+</head>
+<body class="background-gradient">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                   <a href="home.html" class="text-2xl font-bold text-gray-800">Rental<span class="text-sky-500">Hub</span></a>
+                </div>
+                <div class="flex items-center space-x-2">
+                     <a href="home.html" class="px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition">Home</a>
+                     <button id="listings-btn" class="px-3 sm:px-4 py-2 text-sm font-medium text-white bg-sky-600 rounded-md transition">Listings</button>
+                     <button id="profile-btn" class="px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition">My Profile</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Search and Listings View -->
+        <div id="listings-view" class="view-container">
+            <!-- Filter Section -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg mb-10">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Find Your Next Home</h2>
+                <div class="grid grid-cols-2 md:grid-cols-6 gap-4 items-end">
+                    <!-- State -->
+                    <div class="col-span-1">
+                        <label for="state-filter" class="block text-sm font-medium text-gray-700">State</label>
+                        <select id="state-filter" name="state-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md"></select>
+                    </div>
+                    <!-- City -->
+                     <div class="col-span-1">
+                        <label for="city-filter" class="block text-sm font-medium text-gray-700">City</label>
+                        <select id="city-filter" name="city-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md" disabled>
+                            <option value="">Select City</option>
+                        </select>
+                    </div>
+                    <!-- Property Type -->
+                    <div class="col-span-1">
+                        <label for="type-filter" class="block text-sm font-medium text-gray-700">Property Type</label>
+                        <select id="type-filter" name="type-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md">
+                            <option>All Types</option>
+                            <option>PG</option>
+                            <option>Apartment</option>
+                            <option>House</option>
+                        </select>
+                    </div>
+                    <!-- Suitable For -->
+                    <div class="col-span-1">
+                        <label for="suitable-for-filter" class="block text-sm font-medium text-gray-700">Suitable For</label>
+                        <select id="suitable-for-filter" name="suitable-for-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md">
+                            <option>Any</option>
+                            <option>Family</option>
+                            <option>Friends</option>
+                            <option>Couple</option>
+                            <option>Students</option>
+                            <option>Professionals</option>
+                        </select>
+                    </div>
+                    <!-- Sharing Type -->
+                    <div class="col-span-1">
+                        <label for="sharing-type-filter" class="block text-sm font-medium text-gray-700">Sharing Type</label>
+                        <select id="sharing-type-filter" name="sharing-type-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md">
+                            <option>Any</option>
+                            <option>Solo</option>
+                            <option>Duo Sharing</option>
+                            <option>Three Sharing</option>
+                        </select>
+                    </div>
+                    <!-- Search Button -->
+                    <button class="w-full bg-sky-600 text-white font-medium py-2 px-4 rounded-md hover:bg-sky-700 transition duration-300">Search</button>
+                </div>
+            </div>
+            
+             <h2 class="text-2xl font-bold text-gray-800 mb-6">Available Properties for Rent</h2>
+            <div id="property-listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Sample Card 1 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-1">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/a7d8fd/333?text=Cozy+PG" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">PG</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Cozy PG for Students</h3>
+                        <p class="text-gray-600 mt-2">Bodakdev, Ahmedabad</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹8,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Sample Card 2 -->
+                 <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-2">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/e2e8f0/333?text=Modern+Apartment" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">Apartment</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">2BHK Modern Apartment</h3>
+                        <p class="text-gray-600 mt-2">Bandra, Mumbai</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹25,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Sample Card 3 -->
+                 <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-3">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/fecaca/333?text=Family+House" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">House</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Spacious Family House</h3>
+                        <p class="text-gray-600 mt-2">Malviya Nagar, Jaipur</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹18,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                             <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-4">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/bfdbfe/333?text=Tech+Hub+Apartment" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">Apartment</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">1BHK Near Tech Park</h3>
+                        <p class="text-gray-600 mt-2">Koramangala, Bengaluru</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹22,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 5 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-5">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/ddd6fe/333?text=Beach+Side+House" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">House</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Villa near the Beach</h3>
+                        <p class="text-gray-600 mt-2">Besant Nagar, Chennai</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹35,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 6 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-6">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/c7d2fe/333?text=Executive+PG" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">PG</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">PG for Professionals</h3>
+                        <p class="text-gray-600 mt-2">Hinjewadi, Pune</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹10,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 7 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-7">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/a5b4fc/333?text=City+View+Flat" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">Apartment</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">High-rise City Apartment</h3>
+                        <p class="text-gray-600 mt-2">Gachibowli, Hyderabad</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹28,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 8 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-8">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/818cf8/333?text=Heritage+Home" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">House</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Traditional Bengali House</h3>
+                        <p class="text-gray-600 mt-2">Salt Lake, Kolkata</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹20,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 9 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-9">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/6366f1/333?text=Campus+PG" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">PG</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">PG Near DU Campus</h3>
+                        <p class="text-gray-600 mt-2">Mukherjee Nagar, New Delhi</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹12,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 10 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-10">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/4f46e5/333?text=Corporate+Suite" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">Apartment</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Luxury Corporate Apartment</h3>
+                        <p class="text-gray-600 mt-2">DLF Phase 5, Gurugram</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹40,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Card 11 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-11">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/a78bfa/333?text=Suburban+Villa" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">House</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Quiet Suburban House</h3>
+                        <p class="text-gray-600 mt-2">Sector 50, Noida</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹23,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 12 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-12">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/f472b6/333?text=Girls+PG" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">PG</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Secure Girls PG</h3>
+                        <p class="text-gray-600 mt-2">Sector 22, Chandigarh</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹9,500 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 13 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-13">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/fb923c/333?text=Gated+Community" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">Apartment</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">3BHK in Gated Community</h3>
+                        <p class="text-gray-600 mt-2">Indira Nagar, Lucknow</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹16,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 14 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-14">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/facc15/333?text=Garden+House" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">House</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Independent House with Garden</h3>
+                        <p class="text-gray-600 mt-2">Arera Colony, Bhopal</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹19,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 15 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-15">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/a3e635/333?text=Budget+PG" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">PG</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Affordable PG for All</h3>
+                        <p class="text-gray-600 mt-2">Vijay Nagar, Indore</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹6,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 16 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-16">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/34d399/333?text=Studio+Flat" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">Apartment</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Compact Studio Apartment</h3>
+                        <p class="text-gray-600 mt-2">Vesu, Surat</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹14,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 17 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-17">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/2dd4bf/333?text=Row+House" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">House</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Modern Row House</h3>
+                        <p class="text-gray-600 mt-2">Alkapuri, Vadodara</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹21,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 18 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-18">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/22d3ee/333?text=Clean+PG" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">PG</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Hygienic Boys PG</h3>
+                        <p class="text-gray-600 mt-2">Kalawad Road, Rajkot</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹7,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 19 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-19">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/67e8f9/333?text=Heritage+Flat" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">Apartment</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Flat in Heritage City</h3>
+                        <p class="text-gray-600 mt-2">Jayalakshmipuram, Mysuru</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹15,500 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 20 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-20">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/a5f3fc/333?text=Couple+Home" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">House</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Cozy House for Couples</h3>
+                        <p class="text-gray-600 mt-2">Fort Kochi, Kochi</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹17,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 21 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-21">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/f0abfc/333?text=Trivandrum+PG" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">PG</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">PG with Food</h3>
+                        <p class="text-gray-600 mt-2">Technopark, Thiruvananthapuram</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹8,500 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 22 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-22">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/f9a8d4/333?text=Coimbatore+Flat" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">Apartment</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Well-ventilated Apartment</h3>
+                        <p class="text-gray-600 mt-2">R.S. Puram, Coimbatore</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹13,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 23 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-23">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/f472b6/333?text=Madurai+House" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">House</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">House near Meenakshi Temple</h3>
+                        <p class="text-gray-600 mt-2">Anna Nagar, Madurai</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹16,500 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 24 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-24">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/ec4899/333?text=Vizag+PG" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">PG</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Sea-facing PG</h3>
+                        <p class="text-gray-600 mt-2">MVP Colony, Visakhapatnam</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹9,000 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 25 -->
+                <div class="property-card bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="prop-25">
+                    <img class="h-56 w-full object-cover" src="https://placehold.co/600x400/db2777/333?text=Vijayawada+Flat" alt="Property Image">
+                    <div class="p-6">
+                        <p class="text-sm text-sky-600 font-semibold">Apartment</p>
+                        <h3 class="text-xl font-bold text-gray-800 mt-1">Riverside Apartment</h3>
+                        <p class="text-gray-600 mt-2">Benz Circle, Vijayawada</p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-lg font-bold text-gray-900">₹14,500 <span class="text-sm font-normal text-gray-500">/month</span></p>
+                            <div class="flex items-center space-x-2">
+                                <button class="favorite-btn p-2 rounded-full bg-gray-100 hover:bg-red-100 text-gray-600 hover:text-red-500 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 016.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"></path></svg>
+                                </button>
+                                <a href="#" class="text-sky-600 font-semibold hover:text-sky-700">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <!-- No results message (hidden by default) -->
+            <div id="no-results" class="hidden text-center py-10">
+                <h3 class="text-xl font-semibold text-gray-700">No Properties Found</h3>
+                <p class="text-gray-500 mt-2">Try adjusting your search filters to find more results.</p>
+            </div>
+        </div>
+
+        <!-- Renter Profile View (Hidden by default) -->
+        <div id="profile-view" class="view-container hidden">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-10">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">My Profile</h1>
+                    <p class="mt-2 text-lg text-gray-600">Manage your information and favorite properties.</p>
+                </div>
+                <!-- Profile Information Section -->
+                 <div class="mb-12">
+                    <!-- Profile Display View -->
+                    <div id="profile-display" class="bg-white p-8 rounded-2xl shadow-lg space-y-4">
+                        <div><h3 class="text-sm font-medium text-gray-500">Full Name</h3><p id="display-name" class="mt-1 text-lg font-semibold text-gray-900"></p></div>
+                        <div><h3 class="text-sm font-medium text-gray-500">Email Address</h3><p id="display-email" class="mt-1 text-lg font-semibold text-gray-900"></p></div>
+                        <div><h3 class="text-sm font-medium text-gray-500">Contact Number</h3><p id="display-phone" class="mt-1 text-lg font-semibold text-gray-900"></p></div>
+                        <div class="pt-5 flex justify-end"><button type="button" id="edit-profile-btn" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700">Edit Profile</button></div>
+                    </div>
+                    <!-- Profile Edit Form (Hidden by default) -->
+                    <form id="profile-edit-form" action="#" method="POST" class="bg-white p-8 rounded-2xl shadow-lg space-y-6 hidden">
+                        <div><label for="renter-name" class="block text-sm font-medium text-gray-700">Full Name</label><input type="text" name="renter-name" id="renter-name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm"></div>
+                        <div><label for="renter-email" class="block text-sm font-medium text-gray-700">Email Address</label><input type="email" name="renter-email" id="renter-email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm"></div>
+                        <div><label for="renter-phone" class="block text-sm font-medium text-gray-700">Contact Number</label><input type="tel" name="renter-phone" id="renter-phone" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm"></div>
+                        <div class="pt-5"><div class="flex justify-end space-x-3"><button type="button" id="cancel-edit-btn" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button><button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700">Save Changes</button></div></div>
+                    </form>
+                </div>
+                 <!-- Favorite Properties Section -->
+                <div id="favorite-section">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">My Favorite Properties</h2>
+                    <div id="favorite-listings" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Favorite properties will be appended here -->
+                    </div>
+                    <p id="no-favorites" class="text-center text-gray-500 py-8">You haven't favorited any properties yet.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- User Data (Simulated) ---
+            const user = { email: 'kaidi420@gmail.com', name: 'kaidi420', phone: '+91 98765 43210' };
+
+            // --- Main View Elements ---
+            const listingsBtn = document.getElementById('listings-btn');
+            const profileBtn = document.getElementById('profile-btn');
+            const listingsView = document.getElementById('listings-view');
+            const profileView = document.getElementById('profile-view');
+            
+            // --- Property Listing Elements ---
+            const propertyListings = document.getElementById('property-listings');
+
+            // --- Profile Display & Edit Elements ---
+            const profileDisplay = document.getElementById('profile-display');
+            const editProfileBtn = document.getElementById('edit-profile-btn');
+            const profileEditForm = document.getElementById('profile-edit-form');
+            const cancelEditBtn = document.getElementById('cancel-edit-btn');
+            const displayName = document.getElementById('display-name');
+            const displayEmail = document.getElementById('display-email');
+            const displayPhone = document.getElementById('display-phone');
+            const renterNameInput = document.getElementById('renter-name');
+            const renterEmailInput = document.getElementById('renter-email');
+            const renterPhoneInput = document.getElementById('renter-phone');
+
+            // --- Favorites Elements ---
+            const favoriteListings = document.getElementById('favorite-listings');
+            const noFavoritesMessage = document.getElementById('no-favorites');
+
+            // --- Main View Switching Logic ---
+            profileBtn.addEventListener('click', () => {
+                listingsView.classList.add('hidden');
+                profileView.classList.remove('hidden');
+                profileBtn.classList.replace('bg-gray-100', 'bg-sky-600');
+                profileBtn.classList.replace('text-gray-700', 'text-white');
+                listingsBtn.classList.replace('bg-sky-600', 'bg-gray-100');
+                listingsBtn.classList.replace('text-white', 'text-gray-700');
+            });
+
+             listingsBtn.addEventListener('click', () => {
+                profileView.classList.add('hidden');
+                listingsView.classList.remove('hidden');
+                listingsBtn.classList.replace('bg-gray-100', 'bg-sky-600');
+                listingsBtn.classList.replace('text-gray-700', 'text-white');
+                profileBtn.classList.replace('bg-sky-600', 'bg-gray-100');
+                profileBtn.classList.replace('text-white', 'text-gray-700');
+            });
+
+            // --- Favorites Logic ---
+            document.body.addEventListener('click', function(event) {
+                const favoriteBtn = event.target.closest('.favorite-btn');
+                const removeBtn = event.target.closest('.remove-favorite-btn');
+
+                if (favoriteBtn && !favoriteBtn.disabled) {
+                    handleFavorite(favoriteBtn);
+                }
+                if (removeBtn) {
+                    handleRemoveFavorite(removeBtn);
+                }
+            });
+
+            function handleFavorite(button) {
+                const card = button.closest('.property-card');
+                const clonedCard = card.cloneNode(true);
+                const newButton = clonedCard.querySelector('.favorite-btn');
+                newButton.classList.remove('favorite-btn');
+                newButton.classList.add('remove-favorite-btn', 'bg-red-100', 'hover:bg-red-200', 'text-red-600', 'hover:text-red-700');
+                newButton.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                favoriteListings.appendChild(clonedCard);
+                button.disabled = true;
+                button.classList.add('favorited');
+                updateFavoritesView();
+            }
+
+            function handleRemoveFavorite(button) {
+                const cardToRemove = button.closest('.property-card');
+                const cardId = cardToRemove.dataset.id;
+                const originalCard = propertyListings.querySelector(`.property-card[data-id="${cardId}"]`);
+                if (originalCard) {
+                    const originalButton = originalCard.querySelector('.favorite-btn');
+                    originalButton.disabled = false;
+                    originalButton.classList.remove('favorited');
+                }
+                cardToRemove.remove();
+                updateFavoritesView();
+            }
+
+            function updateFavoritesView() {
+                if (favoriteListings.children.length > 0) {
+                    noFavoritesMessage.style.display = 'none';
+                } else {
+                    noFavoritesMessage.style.display = 'block';
+                }
+            }
+
+            // --- Profile Editing Logic ---
+            function populateProfileData() {
+                displayName.textContent = user.name;
+                displayEmail.textContent = user.email;
+                displayPhone.textContent = user.phone;
+                renterNameInput.value = user.name;
+                renterEmailInput.value = user.email;
+                renterPhoneInput.value = user.phone;
+            }
+
+            editProfileBtn.addEventListener('click', () => {
+                profileDisplay.classList.add('hidden');
+                profileEditForm.classList.remove('hidden');
+            });
+
+            cancelEditBtn.addEventListener('click', () => {
+                profileEditForm.classList.add('hidden');
+                profileDisplay.classList.remove('hidden');
+            });
+
+            profileEditForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                user.name = renterNameInput.value;
+                user.email = renterEmailInput.value;
+                user.phone = renterPhoneInput.value;
+                populateProfileData();
+                profileEditForm.classList.add('hidden');
+                profileDisplay.classList.remove('hidden');
+            });
+
+            // --- Location Dropdown Logic (Full list) ---
+            const locationData = {"Andaman and Nicobar Islands": ["Port Blair"], "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", "Rajahmundry", "Tirupati"], "Arunachal Pradesh": ["Itanagar", "Tawang"], "Assam": ["Guwahati", "Dibrugarh", "Silchar", "Jorhat"], "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Purnia"], "Chandigarh": ["Chandigarh"], "Chhattisgarh": ["Raipur", "Bhilai", "Bilaspur", "Korba"], "Dadra and Nagar Haveli and Daman and Diu": ["Daman", "Silvassa"], "Delhi": ["New Delhi", "Delhi"], "Goa": ["Panaji", "Margao", "Vasco da Gama"], "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar"], "Haryana": ["Faridabad", "Gurugram", "Panipat", "Ambala", "Hisar"], "Himachal Pradesh": ["Shimla", "Manali", "Dharamshala", "Solan"], "Jammu and Kashmir": ["Srinagar", "Jammu", "Anantnag"], "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro"], "Karnataka": ["Bengaluru", "Mysuru", "Mangaluru", "Hubballi", "Belagavi"], "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur", "Kollam"], "Ladakh": ["Leh", "Kargil"], "Lakshadweep": ["Kavaratti"], "Madhya Pradesh": ["Indore", "Bhopal", "Jabalpur", "Gwalior", "Ujjain"], "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik", "Aurangabad"], "Manipur": ["Imphal"], "Meghalaya": ["Shillong"], "Mizoram": ["Aizawl"], "Nagaland": ["Kohima", "Dimapur"], "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Puri"], "Puducherry": ["Puducherry", "Karaikal"], "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda"], "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner", "Ajmer"], "Sikkim": ["Gangtok"], "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli"], "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Ramagundam"], "Tripura": ["Agartala"], "Uttar Pradesh": ["Lucknow", "Kanpur", "Ghaziabad", "Agra", "Varanasi", "Meerut", "Prayagraj"], "Uttarakhand": ["Dehradun", "Haridwar", "Roorkee", "Haldwani"], "West Bengal": ["Kolkata", "Asansol", "Siliguri", "Durgapur", "Howrah"]};
+            const stateSelect = document.getElementById('state-filter');
+            const citySelect = document.getElementById('city-filter');
+            function populateStates() {
+                stateSelect.innerHTML = '<option value="">Select State</option>';
+                for (const state in locationData) {
+                    const option = document.createElement('option');
+                    option.value = state; option.textContent = state;
+                    stateSelect.appendChild(option);
+                }
+            }
+            populateStates();
+            stateSelect.addEventListener('change', function() {
+                const selectedState = this.value;
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                if (selectedState && locationData[selectedState]) {
+                    citySelect.disabled = false;
+                    locationData[selectedState].forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city; option.textContent = city;
+                        citySelect.appendChild(option);
+                    });
+                } else { citySelect.disabled = true; }
+            });
+
+            // --- Initial Setup ---
+            populateProfileData();
+            updateFavoritesView();
+        });
+    </script>
+</body>
+</html>
+
