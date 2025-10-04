@@ -132,16 +132,6 @@ Project/
 - View favorites in the profile section
 - Remove favorites as needed
 
-## 🌟 Future Enhancements
-
-- Backend integration for data persistence
-- Real-time chat between owners and renters
-- Payment integration
-- Advanced search with price ranges
-- Property image galleries
-- Email notifications
-- Mobile app development
-
 ## 📞 Support
 
 For any questions or support regarding this project, please contact:
